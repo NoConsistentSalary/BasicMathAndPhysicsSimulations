@@ -1,0 +1,68 @@
+image: gcc
+
+###################################################################################
+# Linux build
+build-linux:
+  stage: build
+  tags:
+    - build_server
+    - linux
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=../bin_linux -DCMAKE_BUILD_TYPE=Release ../
+    - cmake --build . -- -j24
+  #artifacts:
+  #  paths:
+  #   - bin_linux
+
+###################################################################################
+# Windows build
+build-windows:
+  stage: build
+  tags:
+    - build_server
+    - mingw
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=../bin_win -DCMAKE_TOOLCHAIN_FILE=../CMake/mingw-w64-x86_64.cmake -DCMAKE_BUILD_TYPE=Release ../
+    - cmake --build . -- -j24
+  #artifacts:
+  #  paths:
+  #   - bin_win
+  
+###################################################################################
+# Testcase made in class
+test-job:
+  stage: test
+  tags:
+    - build_server
+    - linux
+  script:
+    - mkdir build
+    - cd build
+    - cmake ../
+    - cmake --build . -- -j24
+    - ./4_simple_math > 4_simple_math_output.md
+  artifacts:
+    paths:
+      - build/4_simple_math_output.md
+      
+###################################################################################
+# ...
+
+test-job:
+  stage: test
+  tags:
+    - build_server
+    - linux
+  script:
+    - mkdir build
+    - cd build
+    - cmake ../
+    - cmake --build . -- -j24
+    - ./Vektorien_Ja_Matriisien_Toiminnallisuuden_Ohjelmointi > Test_log.md
+  artifacts:
+    paths:
+      - build/Test_log.md
